@@ -1,13 +1,60 @@
 <html>
 
 <head>
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 
 <body>
     <!-- <svg height="800" width="1200"></svg> -->
+    <div class="row" id="maindiv">
+        <div class="col s9" id="svgdiv"></div>
+        <div class="col s3" style="margin-top: 50px;">
+            <a class="dropdown-trigger btn" href="#" data-target="dropdown1">Select Player</a>
+            <!-- Dropdown Structure -->
+            <ul id="dropdown1" class="dropdown-content">
+                <li>
+                    <a href="#!">one</a>
+                </li>
+                <li>
+                    <a href="#!">two</a>
+                </li>
+                <li class="divider" tabindex="-1"></li>
+                <li>
+                    <a href="#!">three</a>
+                </li>
+                <li>
+                    <a href="#!">
+                        <i class="material-icons">view_module</i> four
+                    </a>
+                </li>
+                <li>
+                    <a href="#!">
+                        <i class="material-icons">cloud</i> five
+                    </a>
+                </li>
+            </ul>
+            <a class="waves-effect waves-light btn" id="Reset">Reset Zoom</a>
+            <p>
+                Can display details of the player here, get info from the dataset, if possible try and display an image of the player too will look great
+            </p>
+        </div>
+    </div>
+    <script>
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var elems = document.querySelectorAll('.dropdown-trigger');
+        //     var instances = M.Dropdown.init(elems, options);
+        // });
+        $(document).ready(function() {
+            $('.modal').modal();
+            $('.dropdown-trigger').dropdown();
+        });
+    </script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="./scripts/Courtsvgpath.js"></script>
+    <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
 </body>
 
 </html>
