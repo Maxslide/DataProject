@@ -49,5 +49,11 @@ finalcoor = []
 for line in range(1,len(lindic)):
     for i in range(len(line1) - 1):
         finalcoor.append([lindic[line][i],lindic[line][i+1],lindic[line+1][i+1],lindic[line+1][i]])
+    
+temp = []    
+for i in range(1,10):
+    temp.append(lindic[i][3][1]/(600 -lindic[i][3][0]+1))
+    
         
 print(finalcoor)
+print(temp)

@@ -289,15 +289,176 @@ data = [
     ],
 ];
 
+YbyX = [-0.0, -0.46445182724252493, -1.0550512573381232, -2.495057774173931, -331.126, 331.126, 2.5361879249948474, 1.0643772650932555, 0.4675585284280937, 0.0]
+var ID;
+missmade = []
+for (var i = 0; i < 48; i++) {
+    missmade.push([0, 0]);
+}
+
 $("#Reset").click(() => {
     canvas.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+});
+$("#PointMap").click(() => {
+    abc(ID);
 });
 // data generated from the python file pathlinesdata.py
 var canvas;
 var zoom;
 
+var magicRatio = 20.4545
+
 function abc(id) {
     console.log(id);
+    d3.json("../data/" + id + "/shots_data.json", function(dataarr) {
+        // console.log(dataarr)
+        canvas
+            .select("g")
+            .selectAll("circle")
+            .data(dataarr)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d) {
+                var x_coor = 600;
+                if (d.SHOT_ANGLE < 0) {
+                    // console.log("lessthan0");
+                    x_coor = 600 - ((d.SHOT_DISTANCE * magicRatio) / (Math.sqrt(1 + (d.SHOT_ANGLE * d.SHOT_ANGLE))));
+                } else if (d.SHOT_ANGLE > 0) {
+                    x_coor = 600 + ((d.SHOT_DISTANCE * magicRatio) / (Math.sqrt(1 + (d.SHOT_ANGLE * d.SHOT_ANGLE))));
+
+
+                }
+                return x_coor;
+            })
+            .attr("cy", function(d) {
+                var y_coor = 0;
+                if (d.SHOT_ANGLE != 0) {
+                    y_coor = (d.SHOT_DISTANCE * magicRatio) / (Math.sqrt(1 + ((1 / d.SHOT_ANGLE) * (1 / d.SHOT_ANGLE))));
+                }
+                return y_coor;
+            })
+            .attr("r", "2")
+            .attr("stroke", "black")
+            .attr("stroke-width", "0.1")
+            .attr("fill", "blue");
+        canvas.selectAll()
+    });
+}
+
+function colour(id) {
+    ID = id;
+    console.log("here");
+    d3.json("../data/" + id + "/shots_data.json", function(dataarr) {
+
+
+        for (var i = 0; i < dataarr.length; i++) {
+            for (var j = 0; j < 4; j++) {
+                if (dataarr[i].SHOT_ANGLE <= YbyX[j] && dataarr[i].SHOT_ANGLE > YbyX[j + 1]) {
+                    var temp = [0, 100, 200, 300, 400, 500, 600]
+                    for (var k = 0; k < 6; k++) {
+                        if ((dataarr[i].SHOT_DISTANCE * magicRatio) >= temp[k] && (dataarr[i].SHOT_DISTANCE * magicRatio) < temp[k + 1]) {
+                            missmade[6 * j + (6 - k - 1)][dataarr[i].SHOT_MADE_FLAG]++;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            for (var j = 5; j < 9; j++) {
+                if (dataarr[i].SHOT_ANGLE <= YbyX[j] && dataarr[i].SHOT_ANGLE > YbyX[j + 1]) {
+                    var temp = [0, 100, 200, 300, 400, 500, 600]
+                    for (var k = 0; k < 6; k++) {
+                        if ((dataarr[i].SHOT_DISTANCE * magicRatio) >= temp[k] && (dataarr[i].SHOT_DISTANCE * magicRatio) < temp[k + 1]) {
+                            missmade[6 * (j - 1) + (6 - k - 1)][dataarr[i].SHOT_MADE_FLAG]++;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        console.log(missmade);
+        console.log("Here");
+        d3.select("svg").remove();
+
+        function zoomed() {
+            console.log(d3.event.transform.k)
+            canvas.attr("transform", d3.event.transform);
+        }
+
+        zoom = d3.zoom().on("zoom", zoomed);
+        canvas = d3
+            .select("body")
+            .select("#maindiv")
+            .select("#svgdiv")
+            .append("svg")
+            .attr("width", 1200)
+            .attr("height", 970)
+            .attr("transform", "translate(50,50)")
+            .call(zoom)
+            .append("g");
+        // console.log(data)
+        canvas.append("path")
+            .attr("d", "M150 0 L150 178 A 491 491 0 0 0 1050 178 L1050 0")
+            .attr("stroke", "red")
+            .attr("stroke-width", "3")
+            .attr("stroke-opacity", "0.5")
+            .attr("fill", "none");
+        canvas.append("path")
+            .attr("d", "M437 0 L437 307 L763 307 L763 0 ")
+            .attr("stroke", "red")
+            .attr("stroke-opacity", "0.5")
+            .attr("stroke-width", "3")
+            .attr("fill", "none");
+        canvas.append("circle")
+            .attr("cx", "600")
+            .attr("cy", "307")
+            .attr("r", "163")
+            .attr("stroke", "red")
+            .attr("stroke-opacity", "0.5")
+            .attr("stroke-width", "3")
+            .attr("fill", "none")
+        canvas.append("path")
+            .attr("d", "M89 0 L89 961 L1111 961 L1111 0 ")
+            .attr("stroke", "red")
+            .attr("stroke-opacity", "0.5")
+            .attr("stroke-width", "3")
+            .attr("fill", "none");
+        console.log(canvas);
+        canvas.append("g")
+        canvas
+            .select("g")
+            .selectAll("path")
+            .data(data)
+            .enter()
+            .append("path")
+            .attr("d", function(d) {
+                console.log(d);
+                var path = "M";
+                path += d[0][0] + " " + d[0][1] + " ";
+                path += "L";
+                path += d[1][0] + " " + d[1][1] + " ";
+                path += "L";
+                path += d[2][0] + " " + d[2][1] + " ";
+                path += "L";
+                path += d[3][0] + " " + d[3][1] + " ";
+                path += "Z";
+                console.log(path);
+                return path;
+            })
+            .attr("stroke", "black")
+            .attr("stroke-width", "1")
+            .attr("fill", "black")
+            .attr("fill-opacity", function(d, i) {
+
+                console.log(missmade[i][1] / (missmade[i][0] + missmade[i][1]))
+                return " " + missmade[i][1] / (missmade[i][0] + missmade[i][1]);
+            })
+            .append("svg:title")
+            .text(function(d, i) {
+                return "Hey" + i;
+            });
+    });
 }
 
 function tomakepath() {
@@ -321,8 +482,36 @@ function tomakepath() {
         .call(zoom)
         .append("g");
     // console.log(data)
+    canvas.append("path")
+        .attr("d", "M150 0 L150 178 A 491 491 0 0 0 1050 178 L1050 0")
+        .attr("stroke", "red")
+        .attr("stroke-width", "3")
+        .attr("stroke-opacity", "0.5")
+        .attr("fill", "none");
+    canvas.append("path")
+        .attr("d", "M437 0 L437 307 L763 307 L763 0 ")
+        .attr("stroke", "red")
+        .attr("stroke-opacity", "0.5")
+        .attr("stroke-width", "3")
+        .attr("fill", "none");
+    canvas.append("circle")
+        .attr("cx", "600")
+        .attr("cy", "307")
+        .attr("r", "163")
+        .attr("stroke", "red")
+        .attr("stroke-opacity", "0.5")
+        .attr("stroke-width", "3")
+        .attr("fill", "none")
+    canvas.append("path")
+        .attr("d", "M89 0 L89 961 L1111 961 L1111 0 ")
+        .attr("stroke", "red")
+        .attr("stroke-opacity", "0.5")
+        .attr("stroke-width", "3")
+        .attr("fill", "none");
     console.log(canvas);
+    canvas.append("g")
     canvas
+        .select("g")
         .selectAll("path")
         .data(data)
         .enter()
@@ -342,33 +531,14 @@ function tomakepath() {
             return path;
         })
         .attr("stroke", "black")
+        .attr("stroke-width", "1")
+        .attr("fill-opacity", "0.1")
         .attr("fill", "white")
         .append("svg:title")
         .text(function(d, i) {
             return "Hey" + i;
         });
-    canvas.append("path")
-        .attr("d", "M150 0 L150 178 A 491 491 0 0 0 1050 178 L1050 0")
-        .attr("stroke", "red")
-        .attr("stroke-width", "3")
-        .attr("fill", "none");
-    canvas.append("path")
-        .attr("d", "M437 0 L437 307 L763 307 L763 0 ")
-        .attr("stroke", "red")
-        .attr("stroke-width", "3")
-        .attr("fill", "none");
-    canvas.append("circle")
-        .attr("cx", "600")
-        .attr("cy", "307")
-        .attr("r", "163")
-        .attr("stroke", "red")
-        .attr("stroke-width", "3")
-        .attr("fill", "none")
-    canvas.append("path")
-        .attr("d", "M89 0 L89 961 L1111 961 L1111 0 ")
-        .attr("stroke", "red")
-        .attr("stroke-width", "3")
-        .attr("fill", "none");
+
 
 }
 tomakepath();

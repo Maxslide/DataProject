@@ -10,13 +10,15 @@
 <body>
     <!-- <svg height="800" width="1200"></svg> -->
     <div class="row" id="maindiv">
-        <div class="col s9" id="svgdiv"></div>
+        <div class="col s9" id="svgdiv">
+            <div id="court"></div>
+        </div>
         <div class="col s3" style="margin-top: 50px;">
             <a class="dropdown-trigger btn" href="#" data-target="dropdown1">Select Player</a>
             <!-- Dropdown Structure -->
             <ul id="dropdown1" class="dropdown-content">
-                <li onclick="abc(1)">
-                    <a href="#!">one</a>
+                <li onclick="colour(2544)">
+                    <a href="#!">lebron</a>
                 </li>
                 <li onclick="abc(2)">
                     <a href="#!">two</a>
@@ -37,6 +39,7 @@
                 </li>
             </ul>
             <a class="waves-effect waves-light btn" id="Reset">Reset Zoom</a>
+            <a class="waves-effect waves-light btn" id="PointMap">Point Map</a>
             <p>
                 Can display details of the player here, get info from the dataset, if possible try and display an image of the player too will look great
             </p>
