@@ -296,10 +296,16 @@ $("#Reset").click(() => {
 var canvas;
 var zoom;
 
+function abc(id) {
+    console.log(id);
+}
+
 function tomakepath() {
     console.log("Here");
-    // d3.select("svg").remove();
+    d3.select("svg").remove();
+
     function zoomed() {
+        console.log(d3.event.transform.k)
         canvas.attr("transform", d3.event.transform);
     }
 
@@ -310,7 +316,7 @@ function tomakepath() {
         .select("#svgdiv")
         .append("svg")
         .attr("width", 1200)
-        .attr("height", 800)
+        .attr("height", 970)
         .attr("transform", "translate(50,50)")
         .call(zoom)
         .append("g");
@@ -336,6 +342,32 @@ function tomakepath() {
             return path;
         })
         .attr("stroke", "black")
+        .attr("fill", "white")
+        .append("svg:title")
+        .text(function(d, i) {
+            return "Hey" + i;
+        });
+    canvas.append("path")
+        .attr("d", "M150 0 L150 178 A 491 491 0 0 0 1050 178 L1050 0")
+        .attr("stroke", "red")
+        .attr("stroke-width", "3")
+        .attr("fill", "none");
+    canvas.append("path")
+        .attr("d", "M437 0 L437 307 L763 307 L763 0 ")
+        .attr("stroke", "red")
+        .attr("stroke-width", "3")
+        .attr("fill", "none");
+    canvas.append("circle")
+        .attr("cx", "600")
+        .attr("cy", "307")
+        .attr("r", "163")
+        .attr("stroke", "red")
+        .attr("stroke-width", "3")
+        .attr("fill", "none")
+    canvas.append("path")
+        .attr("d", "M89 0 L89 961 L1111 961 L1111 0 ")
+        .attr("stroke", "red")
+        .attr("stroke-width", "3")
         .attr("fill", "none");
 
 }
