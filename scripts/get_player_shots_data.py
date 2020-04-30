@@ -1,5 +1,5 @@
 from nba_api.stats.static import players
-from nba_api.stats.endpoints import shotchartdetail
+from nba_api.stats.endpoints import shotchartdetail, commonplayerinfo
 import pandas as pd
 import os
 
@@ -17,6 +17,10 @@ def get_player_shots_data(player_full_name):
             os.makedirs(str(os.path.dirname(os.path.abspath(__file__))) + "/../data/" + str(current_player["id"]) + "/", mode=0o777, exist_ok=True)
         except OSError as error:
             print(error)
+        player = commonplayerinfo.CommonPlayerInfo(player_id=str(current_player["id"]))
+        player_df = player.get_data_frames()[0]
+        player_df = player_df.loc[:, ["FIRST_NAME", "LAST_NAME", "COUNTRY", "HEIGHT", "WEIGHT", "JERSEY", "POSITION", "TEAM_ABBREVIATION", "FROM_YEAR", "TO_YEAR"]]
+        player_df.to_json(str(os.path.dirname(os.path.abspath(__file__))) + '/../data/' + str(current_player["id"]) + '/player_data.json', orient='records')
         shots = shotchartdetail.ShotChartDetail(team_id=0, player_id=str(current_player["id"]), context_measure_simple='FGA')
         shots_df = shots.get_data_frames()[0]
         shots_df = shots_df.loc[:, ["TEAM_NAME", "PERIOD", "MINUTES_REMAINING", "SECONDS_REMAINING", "ACTION_TYPE", "SHOT_TYPE", "SHOT_DISTANCE", "LOC_X", "LOC_Y", "SHOT_MADE_FLAG", "GAME_DATE", "HTM", "VTM"]]
@@ -32,3 +36,4 @@ def get_player_shots_data(player_full_name):
         shots_df.drop(["LOC_X", "LOC_Y"], axis=1, inplace=True)
         shots_df.to_json(str(os.path.dirname(os.path.abspath(__file__))) + '/../data/' + str(current_player["id"]) + '/shots_data.json', orient='records')
     return "Player found and data added to database."
+
