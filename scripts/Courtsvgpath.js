@@ -303,6 +303,7 @@ $("#PointMap").click(() => {
     abc(ID);
 });
 // data generated from the python file pathlinesdata.py
+// {"TEAM_NAME":"Cleveland Cavaliers","PERIOD":1,"MINUTES_REMAINING":8,"SECONDS_REMAINING":56,"ACTION_TYPE":"Jump Shot","SHOT_ANGLE":0.0,"SHOT_TYPE":"2PT Field Goal","SHOT_DISTANCE":15,"SHOT_MADE_FLAG":1,"GAME_DATE":"20031029","HTM":"SAC","VTM":"CLE"}
 var canvas;
 var zoom;
 
@@ -340,7 +341,11 @@ function abc(id) {
             .attr("r", "2")
             .attr("stroke", "black")
             .attr("stroke-width", "0.1")
-            .attr("fill", "blue");
+            .attr("fill", "blue")
+            .append("svg:title")
+            .text(function(d) {
+                return "Team_Name : " + d.TEAM_NAME + "\n Period : " + d.PERIOD + "\n Time Remaining : " + d.MINUTES_REMAINING + ":" + d.SECONDS_REMAINING + "\n Shot Action Type : " + d.ACTION_TYPE + "\n Shot Type : " + d.SHOT_TYPE + "\n" + ((d.SHOT_MADE_FLAG ? "SHOT MADE!!" : "SHOT MISSED!!")) + "\n" + "Game Date : " + d.GAME_DATE.substring(0, 4) + "/" + d.GAME_DATE.substring(4, 6) + "/" + d.GAME_DATE.substring(6, 8) + "\n Opponenet Team : " + d.HTM;
+            });
         canvas.selectAll()
     });
 }
@@ -402,12 +407,12 @@ function colour(id) {
             .attr("d", "M150 0 L150 178 A 491 491 0 0 0 1050 178 L1050 0")
             .attr("stroke", "red")
             .attr("stroke-width", "3")
-            .attr("stroke-opacity", "0.5")
+            .attr("stroke-opacity", "0.8")
             .attr("fill", "none");
         canvas.append("path")
             .attr("d", "M437 0 L437 307 L763 307 L763 0 ")
             .attr("stroke", "red")
-            .attr("stroke-opacity", "0.5")
+            .attr("stroke-opacity", "0.8")
             .attr("stroke-width", "3")
             .attr("fill", "none");
         canvas.append("circle")
@@ -415,13 +420,13 @@ function colour(id) {
             .attr("cy", "307")
             .attr("r", "163")
             .attr("stroke", "red")
-            .attr("stroke-opacity", "0.5")
+            .attr("stroke-opacity", "0.8")
             .attr("stroke-width", "3")
             .attr("fill", "none")
         canvas.append("path")
             .attr("d", "M89 0 L89 961 L1111 961 L1111 0 ")
             .attr("stroke", "red")
-            .attr("stroke-opacity", "0.5")
+            .attr("stroke-opacity", "0.8")
             .attr("stroke-width", "3")
             .attr("fill", "none");
         console.log(canvas);
@@ -448,15 +453,15 @@ function colour(id) {
             })
             .attr("stroke", "black")
             .attr("stroke-width", "1")
-            .attr("fill", "black")
-            .attr("fill-opacity", function(d, i) {
+            .attr("fill", function(d, i) {
 
                 console.log(missmade[i][1] / (missmade[i][0] + missmade[i][1]))
-                return " " + missmade[i][1] / (missmade[i][0] + missmade[i][1]);
+                return "rgb(" + 255 + "," + Math.floor(255 * (1 - (missmade[i][1] / (missmade[i][0] + missmade[i][1])))) + "," + 0 + ")";
             })
+            .attr("fill-opacity", "0.7")
             .append("svg:title")
             .text(function(d, i) {
-                return "Hey" + i;
+                return 100 * missmade[i][1] / (missmade[i][0] + missmade[i][1]);
             });
     });
 }
