@@ -20,6 +20,11 @@ def get_player_shots_data(player_full_name):
         shots = shotchartdetail.ShotChartDetail(team_id=0, player_id=str(current_player["id"]), context_measure_simple='FGA')
         shots_df = shots.get_data_frames()[0]
         shots_df = shots_df.loc[:, ["TEAM_NAME", "PERIOD", "MINUTES_REMAINING", "SECONDS_REMAINING", "ACTION_TYPE", "SHOT_TYPE", "SHOT_DISTANCE", "LOC_X", "LOC_Y", "SHOT_MADE_FLAG", "GAME_DATE", "HTM", "VTM"]]
+        shots_distances = []
+        for i in range(shots_df.shape[0]):
+            shots_distances += [(shots_df.at[i, "LOC_X"] ** 2 + shots_df.at[i, "LOC_Y"] ** 2) ** 0.5 / 10]
+        shots_df.drop(["SHOT_DISTANCE"], axis=1, inplace=True)
+        shots_df.insert(5, "SHOT_DISTANCE", shots_distances, True)
         shots_angles = []
         for i in range(shots_df.shape[0]):
             shots_angles += [shots_df.at[i, "LOC_Y"] / shots_df.at[i, "LOC_X"]]
